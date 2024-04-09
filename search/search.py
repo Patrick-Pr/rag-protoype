@@ -39,20 +39,22 @@ def retrieve_doc(prompt: str) -> list[Document]:
 
     retriever = vector_store.as_retriever()
 
-    docs = retriever.get_relevant_documents(prompt)
+    docs = retriever.get_relevant_documents(prompt, search_kwargs={"k", 3})
     print(docs)
     return docs
 
 
-def ask_question(prompt: str):
+def ask_question(prompt_template: PromptTemplate, input_str: str, docs: list[Document]):
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
 
     llm = AzureChatOpenAI(azure_deployment="gpt-35-turbo-16k", api_version=api_version)
 
-    prompt_template = PromptTemplate(input_variables=[], template=prompt)
-
     chain = LLMChain(llm=llm, prompt=prompt_template)
 
-    res = chain.invoke(input={})
+    context_str: str = ""
+    for doc in docs:
+        context_str += doc.page_content + "\n\n"
+
+    res = chain.invoke(input={"input": input_str, "context": context_str})
 
     return res["text"]
