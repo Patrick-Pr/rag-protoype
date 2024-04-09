@@ -3,24 +3,34 @@ from dotenv import load_dotenv
 import streamlit as st
 
 from database.database import add_to_database
+from search.search import retrieve_doc, ask_question
 
 load_dotenv()
 
 # app = typer.Typer()
-
-
+#
+#
 # @app.command()
 # def add(src_directory: str):
 #     add_to_database(src_directory)
 #
+#
+# @app.command()
+# def search(promt: st):
+#     res = ask_question(promt)
+#     print(res)
 
 
 def call_llm(input: str) -> str:
     # TODO: do the LLM call here
-    return input
+    docs = retrieve_doc(input)
+    prompt = f"Context:\n{docs[0].page_content}\n\nQuestion:\n{input}"
+    return ask_question(prompt)
+    # return prompt
 
 
 def main():
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
 

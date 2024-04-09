@@ -16,6 +16,7 @@ openai = "*"
 tiktoken = "*"
 unstructured = "*"
 streamlit = "*"
+langchain-openai = "*"
 
 [dev-packages]
 ruff = "*"
