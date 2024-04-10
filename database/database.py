@@ -9,8 +9,8 @@ from langchain_community.document_loaders.html import UnstructuredHTMLLoader
 from langchain_community.document_loaders.html_bs import BSHTMLLoader
 from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
 from langchain_community.vectorstores.azuresearch import AzureSearch
-from langchain_core.documents import Document
 from langchain_text_splitters import CharacterTextSplitter
+from langchain_core.documents import Document
 
 
 class Doc:
@@ -31,7 +31,7 @@ class Doc:
         )
 
 
-def add_to_database(src_docs: list[Doc], index_name: str):
+def add_to_database(src_docs: list[Doc], index_name: str = "rag-prototype-streamlit"):
     api_key = os.environ["AZURE_OPENAI_API_KEY"]
     azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT_NAME"]
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
@@ -61,7 +61,6 @@ def add_to_database(src_docs: list[Doc], index_name: str):
     )
 
     # loader = DirectoryLoader(src_directory, glob="**/*.html", loader_cls=BSHTMLLoader)
-    from langchain_core.documents import Document
 
     text_splitter = CharacterTextSplitter(
         separator=" ",

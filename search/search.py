@@ -8,7 +8,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain_openai import AzureOpenAI, ChatOpenAI, AzureChatOpenAI
 
 
-def retrieve_doc(prompt: str) -> list[Document]:
+def retrieve_doc(
+    prompt: str, index_name: str = "rag-prototype-streamlit"
+) -> list[Document]:
     api_key = os.environ["AZURE_OPENAI_API_KEY"]
     azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT_NAME"]
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
@@ -27,8 +29,6 @@ def retrieve_doc(prompt: str) -> list[Document]:
         api_key=api_key,
     )
 
-    index_name = "rag-prototype-streamlit"
-
     vector_store = AzureSearch(
         azure_search_endpoint=search_service_endpoint,
         azure_search_key=search_service_api_key,
@@ -44,7 +44,11 @@ def retrieve_doc(prompt: str) -> list[Document]:
     return docs
 
 
-def ask_question(prompt_template: PromptTemplate, input_str: str, docs: list[Document]):
+def ask_question(
+    prompt_template: PromptTemplate,
+    input_str: str,
+    docs: list[Document],
+) -> str:
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
 
     llm = AzureChatOpenAI(azure_deployment="gpt-35-turbo-16k", api_version=api_version)

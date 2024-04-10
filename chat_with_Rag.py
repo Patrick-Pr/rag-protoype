@@ -12,8 +12,8 @@ from search.search import retrieve_doc, ask_question
 load_dotenv()
 
 
-def call_llm(input_str: str) -> tuple[str, list[Document]]:
-    docs = retrieve_doc(input_str)
+def call_llm(input_str: str, index_name: str) -> tuple[str, list[Document]]:
+    docs = retrieve_doc(input_str, index_name)
 
     prompt = "Context:\n{context}\n\nQuestion:\n{input}"
     prompt_template = PromptTemplate(
@@ -29,6 +29,10 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    index_name = st.text_input(label="Index Name", value="rag-prototype-streamlit")
+    st.session_state.index_name = index_name.lower().strip().replace(" ", "_")
+    st.divider()
+
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -38,7 +42,7 @@ def main():
         st.session_state.messages.append({"role": "user", "content": prompt})
 
         with st.spinner(text="Generating Answer"):
-            response, docs = call_llm(prompt)
+            response, docs = call_llm(prompt, st.session_state.index_name)
 
         with st.chat_message("assistant"):
             st.markdown(response)

@@ -5,7 +5,7 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 from database.database import Doc, add_to_database
 
-index_name = st.text_input(label="Index Name")
+index_name = st.text_input(label="Index Name", value="rag-prototype-streamlit")
 index_name = index_name.lower().strip().replace(" ", "_")
 
 uploaded_files: list[UploadedFile] = st.file_uploader(
