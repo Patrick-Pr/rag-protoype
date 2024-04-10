@@ -1,0 +1,7 @@
+services:
+  rag-prototype:
+    build: .
+    ports:
+      - 8501:8501
+    env_file:
+      - path: ./.env
