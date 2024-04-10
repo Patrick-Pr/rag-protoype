@@ -5,6 +5,11 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 from database.database import Doc, add_to_database
 
+index_name = st.text_input(label="Index Name")
+index_name = index_name.lower()
+words = index_name.split(" ")
+index_name = "_".join(words)
+
 uploaded_files: list[UploadedFile] = st.file_uploader(
     "choose a file", accept_multiple_files=True, type="html"
 )
@@ -20,4 +25,4 @@ if st.button("Upload", type="primary"):
         )
 
     with st.spinner(text="Document Upload"):
-        add_to_database(docs)
+        add_to_database(docs, index_name)

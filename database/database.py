@@ -31,7 +31,7 @@ class Doc:
         )
 
 
-def add_to_database(src_docs: list[Doc]):
+def add_to_database(src_docs: list[Doc], index_name: str):
     api_key = os.environ["AZURE_OPENAI_API_KEY"]
     azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT_NAME"]
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
@@ -51,8 +51,6 @@ def add_to_database(src_docs: list[Doc]):
         azure_endpoint=azure_endpoint,
         api_key=api_key,
     )
-
-    index_name = "rag-prototype-streamlit"
 
     vector_store = AzureSearch(
         azure_search_endpoint=search_service_endpoint,
