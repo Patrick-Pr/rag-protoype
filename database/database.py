@@ -1,16 +1,11 @@
 import os
-from typing import TypedDict
 
 import nltk
 from bs4 import BeautifulSoup
-
-from langchain_community.document_loaders.directory import DirectoryLoader
-from langchain_community.document_loaders.html import UnstructuredHTMLLoader
-from langchain_community.document_loaders.html_bs import BSHTMLLoader
-from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
 from langchain_community.vectorstores.azuresearch import AzureSearch
-from langchain_text_splitters import CharacterTextSplitter
 from langchain_core.documents import Document
+from langchain_openai import AzureOpenAIEmbeddings
+from langchain_text_splitters import CharacterTextSplitter
 
 
 class Doc:
@@ -24,7 +19,7 @@ class Doc:
         self.type = type
 
     def to_document(self) -> Document:
-        soup = BeautifulSoup(self.content)
+        soup = BeautifulSoup(self.content, parser="lxml")
         return Document(
             page_content=soup.get_text(),
             metadata={"file_name": self.file_name, "type": self.type},
@@ -33,14 +28,13 @@ class Doc:
 
 def add_to_database(src_docs: list[Doc], index_name: str = "rag-prototype-streamlit"):
     api_key = os.environ["AZURE_OPENAI_API_KEY"]
-    azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT_NAME"]
+    azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT"]
     api_version = os.environ["AZURE_OPENAI_API_VERSION"]
 
     search_service_api_key = os.environ["AZURE_AI_SEARCH_SERVICE_API_KEY"]
     search_service_endpoint = os.environ["AZURE_AI_SEARCH_SERVICE_ENDPOINT"]
     search_service_api_version = os.environ["AZURE_AI_SEARCH_SERVICE_API_VERSION"]
 
-    embedding_model = os.environ["AZURE_OPENAI_API_EMBEDDING_MODEL_NAME"]
     deployment_name = os.environ["AZURE_OPENAI_API_EMBEDDING_DEPLOYMENT_NAME"]
 
     nltk.download("punkt")
