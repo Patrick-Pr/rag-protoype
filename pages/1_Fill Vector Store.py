@@ -19,5 +19,5 @@ if st.button("Upload", type="primary"):
             Doc(content=text, file_name=uploaded_file.name, type=uploaded_file.type)
         )
 
-    with st.spinner():
+    with st.spinner(text="Document Upload"):
         add_to_database(docs)
